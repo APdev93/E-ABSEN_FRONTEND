@@ -1,0 +1,1 @@
+global.backend = "https://e-absen-frontend.vercel.app";

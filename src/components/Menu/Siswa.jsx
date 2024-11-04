@@ -6,6 +6,7 @@ import DeleteConfirm from "../SiswaComponent/DeleteConfirm";
 import Button from "react-bootstrap/Button";
 import AddSiswaForm from "../SiswaComponent/AddSiswaForm";
 import AttendanceTable from "../Absensi/AttendanceTable"
+import "../../config.js"
 
 const Siswa = () => {
 	const [students, setStudents] = useState([]);
@@ -18,7 +19,7 @@ const Siswa = () => {
 	const fetchStudents = async () => {
 		try {
 			const token = sessionStorage.getItem("token");
-			const response = await axios.get("https://e-absen.apbiz.xyz/api/siswa", {
+			const response = await axios.get(`${global.backend}/api/siswa`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			setStudents(response.data.data);

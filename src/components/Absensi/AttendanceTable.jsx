@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Pagination, Form, Button } from "react-bootstrap";
 import moment from "moment";
+import "../../config.js";
 
 const AttendanceTable = () => {
 	const [attendances, setAttendances] = useState([]);
@@ -13,10 +14,10 @@ const AttendanceTable = () => {
 
 	const fetchAttendances = async () => {
 		try {
-			const response = await axios.get(`https://e-absen.apbiz.xyz/absen/absensi/${date}`);
+			const response = await axios.get(`${global.backend}/absen/absensi/${date}`);
 			setAttendances(response.data);
 		} catch (error) {
-		    setAttendances([])
+			setAttendances([]);
 			console.error("Error fetching attendance data", error);
 		}
 	};
@@ -30,6 +31,13 @@ const AttendanceTable = () => {
 		(currentPage - 1) * itemsPerPage,
 		currentPage * itemsPerPage,
 	);
+
+	const getTime = iso => {
+		let time = new Date(iso);
+		let jam = time.getHours().toString();
+		let menit = time.getMinutes().toString();
+		return `${jam}:${menit}`;
+	};
 
 	// Fungsi untuk mengubah halaman
 	const handlePageChange = pageNumber => setCurrentPage(pageNumber);
@@ -80,12 +88,12 @@ const AttendanceTable = () => {
 									<td>{item.kelas}</td>
 									<td>
 										{item.waktu_absen
-											? moment(item.waktu_absen).format("DD-MM-YYYY HH:mm")
+											? getTime(item.waktu_absen)
 											: "-"}
 									</td>
 									<td>
 										{item.waktu_pulang
-											? moment(item.waktu_pulang).format("DD-MM-YYYY HH:mm")
+											? getTime(item.waktu_pulang)
 											: "-"}
 									</td>
 									<td>{item.status}</td>

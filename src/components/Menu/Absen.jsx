@@ -4,6 +4,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import "../Absensi/QrCodeScanner.css";
 import MyAlert from "../MyAlert";
+import "../../config.js";
 
 const Absen = () => {
 	const [result, setResult] = useState("");
@@ -27,13 +28,13 @@ const Absen = () => {
 
 		let url, body;
 		if (absenType === "masuk") {
-			url = "https://e-absen.apbiz.xyz/absen/masuk";
+			url = `${global.backend}/absen/masuk`;
 			body = {
 				...data,
 				waktu_absen: waktuFormatted, // Format waktu dikirim dalam "YYYY-MM-DD HH:mm:ss"
 			};
 		} else if (absenType === "pulang") {
-			url = "https://e-absen.apbiz.xyz/absen/pulang";
+			url = `${global.backend}/absen/pulang`;
 			body = {
 				nisn: data.nisn,
 				waktu_pulang: waktuFormatted,
@@ -132,7 +133,7 @@ const Absen = () => {
 						<button className="btn mb-3 btn-primary" onClick={() => setAbsenType("")}>
 							Kembali
 						</button>
-		</div>
+					</div>
 					<MyAlert
 						variant={absenType === "masuk" ? "success" : "danger"}
 						text={absenType === "masuk" ? "Absensi Masuk" : "Absensi Pulang"}

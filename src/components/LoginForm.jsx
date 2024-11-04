@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import MyAlert from "./MyAlert";
 import Loader from "./Loader";
+import "../config.js"
 
 const LoginForm = () => {
 	const { login } = useContext(AuthContext);
@@ -44,7 +45,7 @@ const LoginForm = () => {
 
 		setLoading(true);
 		try {
-			let response = await axios.post("https://e-absen.apbiz.xyz/auth/login", {
+			let response = await axios.post(`${global.backend}/auth/login`, {
 				username,
 				password,
 			});

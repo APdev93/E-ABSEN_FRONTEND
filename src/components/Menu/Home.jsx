@@ -1,4 +1,4 @@
-import CounterCard from "../CounterCard";
+
 import { useState, useEffect } from "react";
 
 function DigitalClock() {

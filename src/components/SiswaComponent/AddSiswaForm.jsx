@@ -3,6 +3,7 @@ import MyModal from "../MyModal";
 import MyAlert from "../MyAlert";
 import Loader from "../Loader";
 import axios from "axios";
+import "../../config.js";
 
 const AddSiswaForm = ({ onHide }) => {
 	const [nisn, setnisn] = useState("");
@@ -50,7 +51,7 @@ const AddSiswaForm = ({ onHide }) => {
 		try {
 			const token = sessionStorage.getItem("token");
 			const response = await axios.post(
-				"https://e-absen.apbiz.xyz/api/siswa/add",
+				`${global.backend}/api/siswa/add`,
 				{
 					nisn: nisn,
 					full_name: fullName,
