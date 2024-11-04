@@ -11,55 +11,77 @@ const Absen = () => {
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [absenType, setAbsenType] = useState("");
 
-	const formatDateToMySQL = date => {
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0");
-		const day = String(date.getDate()).padStart(2, "0");
-		const hours = String(date.getHours()).padStart(2, "0");
-		const minutes = String(date.getMinutes()).padStart(2, "0");
-		const seconds = String(date.getSeconds()).padStart(2, "0");
-		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-	};
+	const formatDateToMySQL = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
 
-	const uploadData = async data => {
-	const waktuSekarang = new Date();
-	waktuSekarang.setHours(waktuSekarang.getUTCHours() + 8); // Menyesuaikan ke WITA (UTC+8)
-	const waktuFormatted = formatDateToMySQL(waktuSekarang);
+const getTimeInTimeZone = (timeZone) => {
+    const date = new Date();
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+    });
+    const [
+        { value: month },,
+        { value: day },,
+        { value: year },,
+        { value: hour },,
+        { value: minute },,
+        { value: second }
+    ] = formatter.formatToParts(date);
+    return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
+};
 
-	let url, body;
-	if (absenType === "masuk") {
-		url = `${global.backend}/absen/masuk`;
-		body = {
-			...data,
-			waktu_absen: waktuFormatted, // Format waktu dikirim dalam "YYYY-MM-DD HH:mm:ss"
-		};
-	} else if (absenType === "pulang") {
-		url = `${global.backend}/absen/pulang`;
-		body = {
-			nisn: data.nisn,
-			waktu_pulang: waktuFormatted,
-		};
-	} else {
-		console.error("AbsenType tidak valid");
-		return;
-	}
+const uploadData = async (data) => {
+    const waktuSekarang = getTimeInTimeZone("Asia/Makassar");
+    const waktuFormatted = formatDateToMySQL(waktuSekarang);
 
-	try {
-		const response = await axios.post(url, body);
-		console.log("Response from server:", response.data);
-		Swal.fire({
-			icon: "success",
-			title: response.data.status,
-			text: response.data.message,
-		});
-	} catch (error) {
-		console.error("Error during POST request", error);
-		Swal.fire({
-			icon: "error",
-			title: "Error",
-			text: "Gagal mengunggah data absensi!",
-		});
-	}
+    let url, body;
+    if (absenType === "masuk") {
+        url = `${global.backend}/absen/masuk`;
+        body = {
+            ...data,
+            waktu_absen: waktuFormatted,
+        };
+    } else if (absenType === "pulang") {
+        url = `${global.backend}/absen/pulang`;
+        body = {
+            nisn: data.nisn,
+            waktu_pulang: waktuFormatted,
+        };
+    } else {
+        console.error("AbsenType tidak valid");
+        return;
+    }
+
+    try {
+        const response = await axios.post(url, body);
+        console.log("Response from server:", response.data);
+        Swal.fire({
+            icon: "success",
+            title: response.data.status,
+            text: response.data.message,
+        });
+    } catch (error) {
+        console.error("Error during POST request", error);
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Gagal mengunggah data absensi!",
+        });
+    }
 };
 
 
