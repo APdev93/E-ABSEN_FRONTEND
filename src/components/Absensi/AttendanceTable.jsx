@@ -33,11 +33,15 @@ const AttendanceTable = () => {
 	);
 
 	const getTime = iso => {
-		let time = new Date(iso);
-		let jam = time.getHours().toString();
-		let menit = time.getMinutes().toString();
-		return `${jam}:${menit}`;
-	};
+		if (!iso) return "-";
+		
+		const date = new Date(iso);
+		const hours = String(date.getUTCHours()).padStart(2, "0");
+		const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+
+		return `${hours}:${minutes}`;
+	  };
+	  
 
 	// Fungsi untuk mengubah halaman
 	const handlePageChange = pageNumber => setCurrentPage(pageNumber);
