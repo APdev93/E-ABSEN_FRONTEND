@@ -44,7 +44,7 @@ const LoginForm = () => {
 
 		setLoading(true);
 		try {
-			let response = await axios.post("http://localhost:8081/auth/login", {
+			let response = await axios.post("https://e-absen.apbiz.xyz/auth/login", {
 				username,
 				password,
 			});
@@ -81,7 +81,7 @@ const LoginForm = () => {
 	return (
 		<div
 			className="w-100 mr-0 ml-0 container d-flex align-items-center justify-content-center"
-			style={{ margin:"0 !important", minHeight: "100vh", overflow: "hidden" }}>
+			style={{ margin: "0 !important", minHeight: "100vh", overflow: "hidden" }}>
 			<div
 				className="card p-4 shadow-sm"
 				style={{ width: "100%", maxWidth: "430px", minHeight: "500px" }}>

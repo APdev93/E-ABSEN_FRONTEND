@@ -13,7 +13,7 @@ const AttendanceTable = () => {
 
 	const fetchAttendances = async () => {
 		try {
-			const response = await axios.get(`http://localhost:8081/absen/absensi/${date}`);
+			const response = await axios.get(`https://e-absen.apbiz.xyz/absen/absensi/${date}`);
 			setAttendances(response.data);
 		} catch (error) {
 		    setAttendances([])

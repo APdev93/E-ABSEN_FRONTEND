@@ -50,7 +50,7 @@ const AddSiswaForm = ({ onHide }) => {
 		try {
 			const token = sessionStorage.getItem("token");
 			const response = await axios.post(
-				"http://localhost:8081/api/siswa/add",
+				"https://e-absen.apbiz.xyz/api/siswa/add",
 				{
 					nisn: nisn,
 					full_name: fullName,

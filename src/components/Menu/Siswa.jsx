@@ -18,7 +18,7 @@ const Siswa = () => {
 	const fetchStudents = async () => {
 		try {
 			const token = sessionStorage.getItem("token");
-			const response = await axios.get("http://localhost:8081/api/siswa", {
+			const response = await axios.get("https://e-absen.apbiz.xyz/api/siswa", {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			setStudents(response.data.data);

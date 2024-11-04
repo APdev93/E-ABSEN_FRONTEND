@@ -27,13 +27,13 @@ const Absen = () => {
 
 		let url, body;
 		if (absenType === "masuk") {
-			url = "http://localhost:8081/absen/masuk";
+			url = "https://e-absen.apbiz.xyz/absen/masuk";
 			body = {
 				...data,
 				waktu_absen: waktuFormatted, // Format waktu dikirim dalam "YYYY-MM-DD HH:mm:ss"
 			};
 		} else if (absenType === "pulang") {
-			url = "http://localhost:8081/absen/pulang";
+			url = "https://e-absen.apbiz.xyz/absen/pulang";
 			body = {
 				nisn: data.nisn,
 				waktu_pulang: waktuFormatted,
