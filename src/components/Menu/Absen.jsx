@@ -11,37 +11,29 @@ const Absen = () => {
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [absenType, setAbsenType] = useState("");
 
-	const formatDateToMySQL = (date) => {
+const formatDateToMySQL = (date) => {
+    if (!date || isNaN(date.getTime())) {
+        console.error('Invalid date provided to formatDateToMySQL:', date);
+        return null;
+    }
+    
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
     const seconds = String(date.getSeconds()).padStart(2, "0");
+    
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
 const getTimeInTimeZone = (timeZone) => {
     const date = new Date();
-    const formatter = new Intl.DateTimeFormat("en-US", {
-        timeZone,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-    });
-    const [
-        { value: month },,
-        { value: day },,
-        { value: year },,
-        { value: hour },,
-        { value: minute },,
-        { value: second }
-    ] = formatter.formatToParts(date);
-    return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
+    const utcOffset = date.getTimezoneOffset() * 60000; // UTC offset in milliseconds
+    const localTime = new Date(date.getTime() + utcOffset); // Local time without timezone
+    const timezoneOffsetInHours = 8; // GMT+8 for Asia/Makassar
+    localTime.setHours(localTime.getHours() + timezoneOffsetInHours);
+    return localTime; // Return the adjusted time
 };
 
 const uploadData = async (data) => {
