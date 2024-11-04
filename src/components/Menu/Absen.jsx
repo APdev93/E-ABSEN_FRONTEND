@@ -22,45 +22,46 @@ const Absen = () => {
 	};
 
 	const uploadData = async data => {
-		const waktuSekarang = new Date();
-		waktuSekarang.setHours(waktuSekarang.getHours()); // Menyesuaikan ke WITA (UTC+8)
-		const waktuFormatted = formatDateToMySQL(waktuSekarang); // Memformat waktu sebagai "YYYY-MM-DD HH:mm:ss"
+	const waktuSekarang = new Date();
+	waktuSekarang.setHours(waktuSekarang.getUTCHours() + 8); // Menyesuaikan ke WITA (UTC+8)
+	const waktuFormatted = formatDateToMySQL(waktuSekarang);
 
-		let url, body;
-		if (absenType === "masuk") {
-			url = `${global.backend}/absen/masuk`;
-			body = {
-				...data,
-				waktu_absen: waktuFormatted, // Format waktu dikirim dalam "YYYY-MM-DD HH:mm:ss"
-			};
-		} else if (absenType === "pulang") {
-			url = `${global.backend}/absen/pulang`;
-			body = {
-				nisn: data.nisn,
-				waktu_pulang: waktuFormatted,
-			};
-		} else {
-			console.error("AbsenType tidak valid");
-			return;
-		}
+	let url, body;
+	if (absenType === "masuk") {
+		url = `${global.backend}/absen/masuk`;
+		body = {
+			...data,
+			waktu_absen: waktuFormatted, // Format waktu dikirim dalam "YYYY-MM-DD HH:mm:ss"
+		};
+	} else if (absenType === "pulang") {
+		url = `${global.backend}/absen/pulang`;
+		body = {
+			nisn: data.nisn,
+			waktu_pulang: waktuFormatted,
+		};
+	} else {
+		console.error("AbsenType tidak valid");
+		return;
+	}
 
-		try {
-			const response = await axios.post(url, body);
-			console.log("Response from server:", response.data);
-			Swal.fire({
-				icon: "success",
-				title: response.data.status,
-				text: response.data.message,
-			});
-		} catch (error) {
-			console.error("Error during POST request", error);
-			Swal.fire({
-				icon: "error",
-				title: "Error",
-				text: "Gagal mengunggah data absensi!",
-			});
-		}
-	};
+	try {
+		const response = await axios.post(url, body);
+		console.log("Response from server:", response.data);
+		Swal.fire({
+			icon: "success",
+			title: response.data.status,
+			text: response.data.message,
+		});
+	} catch (error) {
+		console.error("Error during POST request", error);
+		Swal.fire({
+			icon: "error",
+			title: "Error",
+			text: "Gagal mengunggah data absensi!",
+		});
+	}
+};
+
 
 	const onSuccess = async text => {
 		if (isProcessing) return;
