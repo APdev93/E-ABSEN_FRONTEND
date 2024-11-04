@@ -1,3 +1,3 @@
-global.backend = "http://localhost:8081";
+global.backend = "https://e-absen.apbiz.xyz";
 // https://e-absen.apbiz.xyz
 // http://localhost:8081
