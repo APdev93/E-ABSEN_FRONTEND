@@ -1,0 +1,62 @@
+/* QrCodeScanner.css */
+
+.scanner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+}
+
+.scanner-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.scanner-box {
+    width: 100%;
+    height: 250px;
+    border: 2px dashed #007bff;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Sembunyikan semua tombol default */
+html5-qrcode .btn {
+    display: none !important; /* Menyembunyikan semua tombol */
+}
+
+/* Gaya untuk tombol Stop Scan */
+.stop-scan-button {
+    margin-top: 15px;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #d9534f; /* Warna merah */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.stop-scan-button:hover {
+    background-color: #c9302c; /* Warna lebih gelap saat hover */
+}
+
+.scanner-instructions {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+#html5qr-code-full-region__header_message {
+    display:none!important;
+}
