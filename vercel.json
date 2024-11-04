@@ -1,0 +1,10 @@
+{
+	"build": {
+		"env": {
+			"TZ": "Asia/Makassar"
+		}
+	},
+	"env": {
+		"TZ": "Asia/Makassar"
+	}
+}
