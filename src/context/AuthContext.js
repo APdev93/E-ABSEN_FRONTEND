@@ -1,32 +1,41 @@
-import React, { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 
-// Membuat konteks
-const AuthContext = createContext();
+const AuthContext = createContext({});
 
-const AuthProvider = ({ children }) => {
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
+export const AuthProvider = ({ children }) => {
+	const [auth, setAuth] = useState(() => {
+		const savedAuth = sessionStorage.getItem("_A");
+		return savedAuth ? JSON.parse(savedAuth) : {};
+	});
 
+	// Simpan auth ke localStorage setiap kali auth berubah
 	useEffect(() => {
-		const token = sessionStorage.getItem("token");
-		setIsAuthenticated(!!token);
-	}, []);
+		sessionStorage.setItem("_A", JSON.stringify(auth));
+		sessionStorage.setItem("_GA", auth._t);
+	}, [auth]);
 
-	const login = token => {
-		sessionStorage.setItem("token", token);
-		setIsAuthenticated(true);
-	};
+	// fungsi logout
 
 	const logout = () => {
-		sessionStorage.removeItem("token");
-		setIsAuthenticated(false);
+		sessionStorage.removeItem("_A");
+		sessionStorage.setItem("_GA", "");
+		setAuth({});
 	};
 
+	// Validasi expired token
+	useEffect(() => {
+		if (auth?._t) {
+			const tokenPayload = JSON.parse(atob(auth._t.split(".")[1]));
+			if (tokenPayload.exp * 1000 < Date.now()) {
+				sessionStorage.removeItem("_A");
+				setAuth({});
+			}
+		}
+	}, [auth]);
+
 	return (
-		<AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-			{children}
-		</AuthContext.Provider>
+		<AuthContext.Provider value={{ auth, setAuth, logout }}>{children}</AuthContext.Provider>
 	);
 };
 
-
-export { AuthContext, AuthProvider };
+export default AuthContext;

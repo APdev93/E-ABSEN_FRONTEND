@@ -22,18 +22,13 @@ const ScanV1 = ({ onScanSuccess, onScanError }) => {
 	function startQrScanner() {
 		if (!isScanning) {
 			const config = { fps: 1, qrbox: { width: 250, height: 250 } };
-
 			html5QrCodeRef.current
 				.start(
 					{ facingMode: "environment" },
 					config,
-					decodedText => {
+					(decodedText) => {
 						const now = Date.now();
-
-						if (
-							decodedText !== lastScannedText ||
-							now - lastScanTime > debounceTime
-						) {
+						if (decodedText !== lastScannedText || now - lastScanTime > debounceTime) {
 							beep.play();
 							onScanSuccess(decodedText);
 							setLastScannedText(decodedText); // Simpan teks terakhir
@@ -46,9 +41,9 @@ const ScanV1 = ({ onScanSuccess, onScanError }) => {
 							});
 						}
 					},
-					error => {
+					(error) => {
 						if (onScanError) onScanError(error);
-					},
+					}
 				)
 				.then(() => {
 					setIsScanning(true);
@@ -65,7 +60,7 @@ const ScanV1 = ({ onScanSuccess, onScanError }) => {
 					setIsScanning(false);
 					if (callback) callback(); // Memastikan callback dijalankan setelah berhenti
 				})
-				.catch(error => {
+				.catch((error) => {
 					console.error("Error saat berhenti scanning:", error);
 				});
 		}

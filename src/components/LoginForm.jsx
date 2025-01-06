@@ -1,13 +1,15 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
 import MyAlert from "./MyAlert";
 import Loader from "./Loader";
-import "../config.js"
+import "../config.js";
+
+import useAuth from "../hooks/useAuth";
 
 const LoginForm = () => {
-	const { login } = useContext(AuthContext);
+	const { setAuth } = useAuth();
+
 	const navigate = useNavigate();
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -19,7 +21,8 @@ const LoginForm = () => {
 		let valid = true;
 		let errors = { username: "", password: "" };
 
-		if (username.trim() === "") {
+		// Validate username
+		if (!username.trim()) {
 			errors.username = "Username tidak boleh kosong";
 			valid = false;
 		} else if (username.length < 5) {
@@ -27,11 +30,15 @@ const LoginForm = () => {
 			valid = false;
 		}
 
-		if (password.trim() === "") {
+		// Validate password
+		if (!password.trim()) {
 			errors.password = "Password tidak boleh kosong";
 			valid = false;
 		} else if (password.length < 6) {
 			errors.password = "Password minimal 6 karakter";
+			valid = false;
+		} else if (!/\d/.test(password)) {
+			errors.password = "Password harus mengandung angka";
 			valid = false;
 		}
 
@@ -39,7 +46,7 @@ const LoginForm = () => {
 		return valid;
 	};
 
-	const handleSubmit = async e => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (!validateForm()) return;
 
@@ -47,24 +54,27 @@ const LoginForm = () => {
 		try {
 			let response = await axios.post(`${global.backend}/auth/login`, {
 				username,
-				password,
+				password
 			});
 			let data = response.data;
+			let token = data.data.token;
 
 			if (data.status_code === 200) {
-				login(data.data.token);
+				setAuth({ user: { username }, _t: token });
+
 				setLoading(false);
 				setAlert({ variant: "success", text: "Berhasil login!" });
+
 				setTimeout(() => {
 					navigate("/dashboard");
-				}, 2000);
+				}, 1000);
 			} else {
 				setAlert({ variant: "danger", text: data.message });
 			}
 		} catch (error) {
 			setAlert({
 				variant: "danger",
-				text: "Login gagal. Periksa koneksi atau coba lagi.",
+				text: "Login gagal. Periksa koneksi atau coba lagi."
 			});
 		} finally {
 			setLoading(false);
@@ -82,10 +92,12 @@ const LoginForm = () => {
 	return (
 		<div
 			className="w-100 mr-0 ml-0 container d-flex align-items-center justify-content-center"
-			style={{ margin: "0 !important", minHeight: "100vh", overflow: "hidden" }}>
+			style={{ margin: "0 !important", minHeight: "100vh", overflow: "hidden" }}
+		>
 			<div
 				className="card p-4 shadow-sm"
-				style={{ width: "100%", maxWidth: "430px", minHeight: "500px" }}>
+				style={{ width: "100%", maxWidth: "430px", minHeight: "500px" }}
+			>
 				<h1 className="text-left mb-5 mt-4 fs-1">Login</h1>
 				{alert.text && <MyAlert variant={alert.variant} text={alert.text} />}
 				{loading && <Loader />}
@@ -100,7 +112,7 @@ const LoginForm = () => {
 							id="username"
 							placeholder="Masukan username"
 							value={username}
-							onChange={e => setUsername(e.target.value)}
+							onChange={(e) => setUsername(e.target.value)}
 						/>
 						{errors.username && (
 							<small className="text-danger">{errors.username}</small>
@@ -116,7 +128,7 @@ const LoginForm = () => {
 							id="password"
 							placeholder="Masukan password"
 							value={password}
-							onChange={e => setPassword(e.target.value)}
+							onChange={(e) => setPassword(e.target.value)}
 						/>
 						{errors.password && (
 							<small className="text-danger">{errors.password}</small>
@@ -125,7 +137,8 @@ const LoginForm = () => {
 					<button
 						type="submit"
 						className="btn btn-success btn-block btn-lg w-100"
-						disabled={loading}>
+						disabled={loading}
+					>
 						{loading ? "Loading..." : "Login"}
 					</button>
 				</form>

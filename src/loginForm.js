@@ -7,6 +7,7 @@ function LoginForm() {
 	const [password, setPassword] = useState("");
 	const [errors, setErrors] = useState({ username: "", password: "" });
 	const { login } = useContext(AuthContext);
+	
 
 	const validateForm = () => {
 		let valid = true;
@@ -32,13 +33,13 @@ function LoginForm() {
 		return valid;
 	};
 
-	const handleSubmit = async e => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (validateForm()) {
 			try {
 				const response = await axios.post("http://localhost:8081/auth/login", {
 					username,
-					password,
+					password
 				});
 				const data = response.data;
 				// Pastikan token diterima dari respons server
@@ -54,10 +55,12 @@ function LoginForm() {
 	return (
 		<div
 			className="container d-flex align-items-center justify-content-center"
-			style={{ minHeight: "100vh" }}>
+			style={{ minHeight: "100vh" }}
+		>
 			<div
 				className="card p-4 shadow-sm border"
-				style={{ width: "100%", maxWidth: "430px", minHeight: "500px" }}>
+				style={{ width: "100%", maxWidth: "430px", minHeight: "500px" }}
+			>
 				<h1 className="text-left mb-5 mt-4 fs-1">Login</h1>
 				<form onSubmit={handleSubmit}>
 					<div className="form-group mb-4 input-group-lg">
@@ -70,7 +73,7 @@ function LoginForm() {
 							id="username"
 							placeholder="Masukan username"
 							value={username}
-							onChange={e => setUsername(e.target.value)}
+							onChange={(e) => setUsername(e.target.value)}
 						/>
 						{errors.username && (
 							<small className="text-danger">{errors.username}</small>
@@ -86,7 +89,7 @@ function LoginForm() {
 							id="password"
 							placeholder="Masukan password"
 							value={password}
-							onChange={e => setPassword(e.target.value)}
+							onChange={(e) => setPassword(e.target.value)}
 						/>
 						{errors.password && (
 							<small className="text-danger">{errors.password}</small>

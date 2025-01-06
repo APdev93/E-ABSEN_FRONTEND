@@ -1,9 +1,15 @@
-.ctnr {
+*,
+html {
+	font-family: "Open Sans", serif;
+	padding: 0;
+	margin: 0;
+}
+
+.container {
 	display: flex;
 	flex-direction: row;
 	min-height: 100vh;
-	margin: 0 !important;
-	overflow-y: hidden;
+	overflow-x: hidden;
 
 	.content {
 		flex-grow: 1;
@@ -19,18 +25,19 @@
 	.sidebar {
 		padding-left: 10px;
 		color: white;
+		background-color: #26904d;
 		padding: 5px;
 		display: flex;
 		flex-direction: column;
 		gap: 3px;
 		justify-content: flex-start;
 		align-items: center;
-		width: 270px;
+		width: 250px;
 		transition: all 0.3s ease;
 
 		&.closed {
-			width: 65px; // Lebar sidebar ketika ditutup
-			.logo div {
+			width: 55px; // Lebar sidebar ketika ditutup
+			.logo h3 {
 				display: none; // Sembunyikan teks
 			}
 			.logo img {
@@ -49,28 +56,9 @@
 			flex-direction: row;
 			width: 90%;
 			padding: 5px;
-			padding-bottom: 10px;
-			justify-content: center;
-			gap: 20px;
+			border-radius: 5px;
+			justify-content: space-between;
 			align-items: center;
-			border-bottom: 1px solid white;
-
-			div {
-				p {
-					margin: 0 !important;
-				}
-				align-items: center !important;
-				.title {
-					font-size: 20px;
-					font-weight: bold;
-					border-bottom: 1px solid white;
-				}
-				.subtitle {
-					font-weight: bold;
-					font-size: 8px;
-					text-wrap: nowrap;
-				}
-			}
 
 			.menu-btn {
 				width: 50px;
@@ -79,36 +67,20 @@
 				color: white;
 				background-color: transparent;
 				font-size: 30px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
 			}
 		}
 
 		ul {
-			padding: 3px 10px;
+			padding: 3px;
 			display: flex;
 			flex-direction: column;
 			align-items: flex-start; // Posisi ikon dan label
 			width: 100%;
 			justify-content: center;
 			height: 100%;
-			gap: 10px;
-
-			.active {
-				background-color: #4caf50 !important; /* Warna background untuk menu aktif */
-				color: white;
-				border-radius: 4px; /* Opsional, untuk membuat sudut membulat */
-			}
-			.logout {
-				background-color: #db4545 !important; /* Warna background untuk menu aktif */
-				border-radius: 4px; /* Opsional, untuk membuat sudut membulat */
-			}
+			gap: 5px;
 
 			li {
-				padding: 10px 15px;
-				cursor: pointer;
-				transition: background-color 0.3s ease;
 				font-weight: bold;
 				list-style: none;
 				width: 100%;
@@ -116,17 +88,13 @@
 				font-size: 20px;
 				display: flex;
 				flex-direction: row;
-				justify-content: flex-start; // Ikon di kiri, teks di kanan
+				justify-content: center; // Ikon di kiri, teks di kanan
 				align-items: center;
-				gap: 20px;
+
+				
 
 				span {
 					display: inline; // Tampilkan label teks secara default
-				}
-
-				&:hover {
-					background-color: #2e7d32; /* Warna hover */
-					color: white;
 				}
 
 				&.bottom {

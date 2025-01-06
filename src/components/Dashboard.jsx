@@ -1,12 +1,12 @@
-import React, { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { Container, Col } from "react-bootstrap";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../css/dashboard.css";
 import Home from "../components/Menu/Home";
 import Siswa from "../components/Menu/Siswa";
 import Absen from "../components/Menu/Absen";
-import NavBar from "../components/Navbar/NavBar";
-import Button from "../components/Navbar/Button";
+import HasilAbsen from "../components/Menu/HasilAbsen";
+import Jurusan from "../components/Menu/Jurusan";
+import Sidebar from "../components/Sidebar/Sidebar";
 
 const Dashboard = () => {
 	const [activeMenu, setActiveMenu] = useState("home");
@@ -19,32 +19,43 @@ const Dashboard = () => {
 				return <Siswa />;
 			case "absen":
 				return <Absen />;
+			case "absen_result":
+				return <HasilAbsen />;
+			case "jurusan":
+				return <Jurusan />;
 			default:
 				return <Home />;
 		}
 	};
 
-	const { logout } = useContext(AuthContext);
-
 	return (
-		<Container className="p-0 m-0" fluid>
-			<Col md={3} lg={2} className="bg-light shadow-sm h-10 w-100">
-				<NavBar>
-					<Button label="Utama" onClick={() => setActiveMenu("home")} />
-					<Button label="Siswa" onClick={() => setActiveMenu("siswa")} />
-					<Button label="Absen" onClick={() => setActiveMenu("absen")} />
-					<Button label="Logout" onClick={logout} variant="color-dark btn-danger" />
-				</NavBar>
-			</Col>
+		<div className="ctnr" style={{ display: "flex", height: "100vh" }}>
+			<div
+				className="s-bg"
+				style={{
+					backgroundImage: "url('/skolah.jpg')",
+					backgroundSize: "cover",
+					backgroundRepeat: "no-repeat",
+					backgroundPosition: "center",
+					height: "100vh",
+				}}
+			>
+				<Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+			</div>
 
-			<Col
-				md={9}
-				lg={10}
-				
-				className="w-100 dashboard-content p-2 mt-5">
+			<div
+				className="content"
+				style={{
+					width: "100%",
+					height: "100vh",
+					overflow: "auto",
+					flexGrow: 1,
+				}}
+				id="content"
+			>
 				{renderContent()}
-			</Col>
-		</Container>
+			</div>
+		</div>
 	);
 };
 

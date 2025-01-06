@@ -10,7 +10,7 @@ const QrCodeScanner = props => {
 		rememberLastUsedCamera: false,
 		fps: props.fps,
 		qrbox: props.qrbox,
-		aspectRatio: props.aspectRatio,
+		aspectRatio: props.aspectRatio
 	};
 	useEffect(() => {
 		// when component mounts
@@ -23,11 +23,11 @@ const QrCodeScanner = props => {
 		const html5QrcodeScanner = new Html5QrcodeScanner(
 			qrcodeRegionId,
 			config,
-			verbose,
+			verbose
 		);
 		html5QrcodeScanner.render(
 			props.qrCodeSuccessCallback,
-			props.qrCodeErrorCallback,
+			props.qrCodeErrorCallback
 		);
 
 		// cleanup function when component will unmount
@@ -38,7 +38,11 @@ const QrCodeScanner = props => {
 		};
 	}, []);
 
-	return <div id={qrcodeRegionId} />;
+	return (
+		<>
+			<div id={qrcodeRegionId} />
+		</>
+	);
 };
 
 export default QrCodeScanner;

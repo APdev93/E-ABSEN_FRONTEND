@@ -1,34 +1,23 @@
-import React, { useContext } from "react";
+import React from "react";
 import LoginForm from "./components/LoginForm";
 import Dashboard from "./components/Dashboard";
-import {
-	BrowserRouter as Router,
-	Routes,
-	Route,
-	Navigate,
-} from "react-router-dom";
-import { AuthProvider, AuthContext } from "./context/AuthContext";
-
-// Komponen untuk melindungi rute
-function ProtectedRoute({ element }) {
-	const { isAuthenticated } = useContext(AuthContext);
-	return isAuthenticated ? element : <Navigate to="/login" />;
-}
+import { Routes, Route } from "react-router-dom";
+import RequireAuth from "./components/RequireAuth";
+import Layout from "./components/Layout";
 
 function App() {
 	return (
-		<AuthProvider>
-			<Router>
-				<Routes>
-					<Route path="/login" element={<LoginForm />} />
-					<Route
-						path="/dashboard"
-						element={<ProtectedRoute element={<Dashboard />} />}
-					/>
-					<Route path="/" element={<Navigate to="/login" />} />
-				</Routes>
-			</Router>
-		</AuthProvider>
+		<Routes>
+			<Route path="/" element={<Layout />}>
+				{/* Public routes */}
+				<Route index element={<LoginForm />} /> {/* Default route */}
+				<Route path="login" element={<LoginForm />} />
+				{/* Protected routes */}
+				<Route element={<RequireAuth />}>
+					<Route path="dashboard" element={<Dashboard />} />
+				</Route>
+			</Route>
+		</Routes>
 	);
 }
 

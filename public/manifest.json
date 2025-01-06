@@ -1,12 +1,6 @@
 {
   "short_name": "Absensi",
   "name": "Absensi online",
-  "icons": [
-    {
-      "src": "/beep.mp3",
-      "type": "audio/mp3"
-    }
-  ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#3d984a",

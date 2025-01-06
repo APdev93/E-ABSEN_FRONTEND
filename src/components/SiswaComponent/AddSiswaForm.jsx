@@ -49,7 +49,7 @@ const AddSiswaForm = ({ onHide }) => {
 		setIsLoading(true); // tampilkan loading saat proses dimulai
 
 		try {
-			const token = sessionStorage.getItem("token");
+			const token = sessionStorage.getItem("_GA");
 			const response = await axios.post(
 				`${global.backend}/api/siswa/add`,
 				{
@@ -88,7 +88,7 @@ const AddSiswaForm = ({ onHide }) => {
 			<div className="w-100 mt-0">
 				<h3>Masukan data siswa di form ini</h3>
 				{alert.text && <MyAlert variant={alert.variant} text={alert.text} />}
-				{isLoading ? ( // tampilkan Loader jika isLoading true
+				{isLoading ? ( 
 					<Loader />
 				) : (
 					<form onSubmit={handleSubmit}>

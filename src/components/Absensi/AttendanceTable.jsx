@@ -10,7 +10,7 @@ const AttendanceTable = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(10); // Set jumlah data per halaman
 
-	const handleDateChange = event => setDate(event.target.value);
+	const handleDateChange = (event) => setDate(event.target.value);
 
 	const fetchAttendances = async () => {
 		try {
@@ -29,22 +29,21 @@ const AttendanceTable = () => {
 	// Fungsi untuk mendapatkan data yang ditampilkan pada halaman saat ini
 	const currentData = attendances.slice(
 		(currentPage - 1) * itemsPerPage,
-		currentPage * itemsPerPage,
+		currentPage * itemsPerPage
 	);
 
-	const getTime = iso => {
+	const getTime = (iso) => {
 		if (!iso) return "-";
-		
+
 		const date = new Date(iso);
 		const hours = String(date.getUTCHours()).padStart(2, "0");
 		const minutes = String(date.getUTCMinutes()).padStart(2, "0");
 
 		return `${hours}:${minutes}`;
-	  };
-	  
+	};
 
 	// Fungsi untuk mengubah halaman
-	const handlePageChange = pageNumber => setCurrentPage(pageNumber);
+	const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
 	// Menghitung jumlah halaman
 	const totalPages = Math.ceil(attendances.length / itemsPerPage);
@@ -52,8 +51,6 @@ const AttendanceTable = () => {
 	return (
 		<div className="container">
 			<h2 className="my-4">Hasil Absensi</h2>
-
-			{/* Filter berdasarkan tanggal */}
 			<Form inline className="mb-3">
 				<Form.Group>
 					<Form.Label>Pilih Tanggal: </Form.Label>
@@ -74,7 +71,7 @@ const AttendanceTable = () => {
 				<Table striped bordered hover style={{ width: "100%" }}>
 					<thead>
 						<tr>
-							<th>#</th>
+							<th>No</th>
 							<th>Nama</th>
 							<th>Kelas</th>
 							<th>Waktu Absen</th>
@@ -90,16 +87,8 @@ const AttendanceTable = () => {
 									<td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
 									<td>{item.nama}</td>
 									<td>{item.kelas}</td>
-									<td>
-										{item.waktu_absen
-											? getTime(item.waktu_absen)
-											: "-"}
-									</td>
-									<td>
-										{item.waktu_pulang
-											? getTime(item.waktu_pulang)
-											: "-"}
-									</td>
+									<td>{item.waktu_absen ? getTime(item.waktu_absen) : "-"}</td>
+									<td>{item.waktu_pulang ? getTime(item.waktu_pulang) : "-"}</td>
 									<td>{item.status}</td>
 									<td>{item.status_pulang || "-"}</td>
 								</tr>
@@ -129,7 +118,8 @@ const AttendanceTable = () => {
 					<Pagination.Item
 						key={i}
 						active={i + 1 === currentPage}
-						onClick={() => handlePageChange(i + 1)}>
+						onClick={() => handlePageChange(i + 1)}
+					>
 						{i + 1}
 					</Pagination.Item>
 				))}

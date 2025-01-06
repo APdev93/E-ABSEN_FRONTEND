@@ -8,10 +8,10 @@ const StudentTable = ({ students, onDetailClick, onDeleteClick }) => (
 			<thead>
 				<tr>
 					<th>NISN</th>
-					<th>NAMA LENGKAP</th>
-					<th>KELAS</th>
-					<th>NOMOR WALI</th>
-					<th>ACTIONS</th>
+					<th>Nama</th>
+					<th>Kelas</th>
+					<th>Nomer Ortu</th>
+					<th>Aksi</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -23,11 +23,9 @@ const StudentTable = ({ students, onDetailClick, onDeleteClick }) => (
 						<td>{student.parent_number}</td>
 						<td className="d-flex gap-1">
 							<Button variant="danger" onClick={() => onDeleteClick(student)}>
-								Delete
+								Hapus
 							</Button>
-							<Button variant="success">
-								Edit
-							</Button>
+							<Button variant="success">Edit</Button>
 							<Button variant="primary" onClick={() => onDetailClick(student)}>
 								Detail
 							</Button>
