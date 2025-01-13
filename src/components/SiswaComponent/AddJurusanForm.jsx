@@ -17,8 +17,8 @@ const AddJurusanForm = ({ getJurusanData,onHide }) => {
 		e.preventDefault();
 		setLoading(true);
 
-		try {
 			if (validateForm()) {
+		try {
 				let data = await addJurusan(jurusan);
 
 				if (data) {
@@ -28,10 +28,10 @@ const AddJurusanForm = ({ getJurusanData,onHide }) => {
 				} else {
 					setAlert({ variant: "danger", text: data.message });
 				}
-			}
 		} catch (e) {
 			setAlert({ variant: "danger", text: "Internal server error" });
 		}
+			}
 		setLoading(false);
 	};
 

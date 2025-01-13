@@ -1,21 +1,55 @@
 import MyModal from "../MyModal";
-import { useState } from "react";
+import MyAlert from "../MyAlert";
+import { useState, useEffect, useCallback } from "react";
 import Button from "react-bootstrap/Button";
+import { getAllJurusan, addKelas } from "../../api/";
 
-const AddKelasForm = ({ onHide }) => {
+const AddKelasForm = ({ getKelasData, onHide }) => {
 	const [kelas, setKelas] = useState("");
+	const [allJurusan, setAllJurusan] = useState([]);
 	const [jurusan, setJurusan] = useState("");
 	const [loading, setLoading] = useState(false);
+	const [alert, setAlert] = useState({ text: "", variant: "" });
+
 	const [errors, setErrors] = useState({
 		kelas: "",
 		jurusan: ""
 	});
 
+	const getJurusanData = useCallback(async () => {
+		let data = await getAllJurusan();
+
+		if (data) {
+			setAllJurusan(data.data);
+			console.log("Jurusan: ", allJurusan);
+		} else {
+			setAllJurusan([]);
+		}
+	}, []);
+
+	useEffect(() => {
+		getJurusanData();
+	}, [getJurusanData]);
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
 		if (validateForm()) {
-			console.log({ kelas, jurusan });
+			try {
+				let data = await addKelas(kelas, jurusan);
+
+				if (data) {
+					setAlert({ variant: "success", text: data.message });
+					setKelas("");
+					setJurusan("");
+					getKelasData();
+				} else {
+					setAlert({ variant: "danger", text: data.message });
+				}
+			} catch (e) {
+				console.error(e);
+				setAlert({ variant: "danger", text: "Internal server error" });
+			}
 		}
 		setLoading(false);
 	};
@@ -44,6 +78,7 @@ const AddKelasForm = ({ onHide }) => {
 	return (
 		<MyModal title="Tambah Kelas" onHide={onHide}>
 			<h3>Masukan data kelas</h3>
+			{alert.text && <MyAlert variant={alert.variant} text={alert.text} />}
 			<div className="w-100">
 				<form onSubmit={handleSubmit}>
 					<div className="form-group mb-2 input-group-md">
@@ -68,10 +103,18 @@ const AddKelasForm = ({ onHide }) => {
 							required
 							onChange={(e) => setJurusan(e.target.value)}
 						>
-							<option value="">Pilih Jurusan</option>
-							<option value="IPA">IPA</option>
-							<option value="IPS">IPS</option>
-							<option value="Bahasa">Bahasa</option>
+							{allJurusan.length === 0 ? (
+								<option value="">Tidak ada jurusan, silahkan tambah.</option>
+							) : (
+								<>
+									<option value="">Pilih Jurusan</option>
+									{allJurusan.map((data, index) => (
+										<option key={index} value={data.jurusan}>
+											{data.jurusan}
+										</option>
+									))}
+								</>
+							)}
 						</select>
 						{errors.jurusan && <small className="text-danger">{errors.jurusan}</small>}
 					</div>

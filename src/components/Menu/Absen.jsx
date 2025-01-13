@@ -27,17 +27,19 @@ const Absen = () => {
 		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 	};
 
-	const getTimeInTimeZone = (timeZone) => {
-		const date = new Date();
-		const utcOffset = date.getTimezoneOffset() * 60000; // UTC offset in milliseconds
-		const localTime = new Date(date.getTime() + utcOffset); // Local time without timezone
-		const timezoneOffsetInHours = 8; // GMT+8 for Asia/Makassar
-		localTime.setHours(localTime.getHours() + timezoneOffsetInHours);
-		return localTime; // Return the adjusted time
+	const getTimeInTimeZone = () => {
+		const timeInTimezone = new Date().toLocaleString("en-US", {
+			timeZone: global.timeZone
+		});
+
+		const time = new Date(timeInTimezone).getTime();
+		const result = new Date(time);
+
+		return result;
 	};
 
 	const uploadData = async (data) => {
-		const waktuSekarang = getTimeInTimeZone("Asia/Makassar");
+		const waktuSekarang = getTimeInTimeZone();
 		const waktuFormatted = formatDateToMySQL(waktuSekarang);
 
 		let url, body;
@@ -146,7 +148,6 @@ const Absen = () => {
 				</div>
 			) : (
 				<div className="d-flex flex-column gap-2 p-1 mb-3">
-				
 					<div className="scanner">
 						<div className="d-flex flex-row flex-center">
 							<button
@@ -170,8 +171,6 @@ const Absen = () => {
 							<li>Posisikan QRcode tidak terlalu jauh maupun terlalu dekat</li>
 						</ul>
 					</div>
-
-
 				</div>
 			)}
 		</div>

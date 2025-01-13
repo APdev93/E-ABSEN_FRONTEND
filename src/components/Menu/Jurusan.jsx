@@ -6,13 +6,14 @@ import { Table } from "react-bootstrap";
 import AddKelasForm from "../SiswaComponent/AddKelasForm";
 import AddJurusanForm from "../SiswaComponent/AddJurusanForm";
 
-import { getAllJurusan, deleteJurusan } from "../../api/";
+import { getAllJurusan, deleteJurusan, getAllKelas, deleteKelas } from "../../api/";
 
 const Jurusan = () => {
 	const [kelasModalShow, setKelasModalShow] = useState(false);
 	const [jurusanModalShow, setJurusanModalShow] = useState(false);
 
 	const [allJurusan, setAllJurusan] = useState([]);
+	const [allKelas, setAllKelas] = useState([]);
 
 	const kelasModalOpen = () => {
 		setKelasModalShow(true);
@@ -35,9 +36,19 @@ const Jurusan = () => {
 
 		if (data) {
 			setAllJurusan(data.data);
-			console.table(data.data);
 		} else {
 			setAllJurusan([]);
+		}
+	}, []);
+
+	const getKelasData = useCallback(async () => {
+		let data = await getAllKelas();
+
+		if (data) {
+			setAllKelas(data.data);
+			console.table(allKelas);
+		} else {
+			setAllKelas([]);
 		}
 	}, []);
 
@@ -80,9 +91,49 @@ const Jurusan = () => {
 		}
 	};
 
+	const deleteKls = async (id) => {
+		try {
+			Swal.fire({
+				title: "Apakah anda yakin?",
+				text: "Anda tidak dapat mengembalikannya!",
+				icon: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#007ff8",
+				cancelButtonColor: "#d33",
+				confirmButtonText: "Ya, hapus!"
+			}).then(async (result) => {
+				if (result.isConfirmed) {
+					let data = await deleteKelas(id);
+					if (data) {
+						Swal.fire({
+							title: "Dihapus!",
+							text: data.message,
+							icon: "success"
+						});
+						getKelasData();
+					} else {
+						Swal.fire({
+							icon: "error",
+							title: "Error",
+							text: data.message
+						});
+					}
+				}
+			});
+		} catch (e) {
+			console.log(e);
+			Swal.fire({
+				icon: "error",
+				title: "Error",
+				text: "Internal Server Error"
+			});
+		}
+	};
+
 	useEffect(() => {
 		getJurusanData();
-	}, [getJurusanData]);
+		getKelasData();
+	}, [getJurusanData, getKelasData]);
 
 	return (
 		<div className="mt-3 d-flex flex-column gap-3 p-2">
@@ -109,14 +160,20 @@ const Jurusan = () => {
 						</tr>
 					</thead>
 					<tbody>
-						<tr key="1">
-							<td>no</td>
-							<td>XII</td>
-							<td>Ipa</td>
-							<td className="d-flex gap-1">
-								<Button variant="danger">Hapus</Button>
-							</td>
-						</tr>
+						{allKelas.map((data, index) => {
+							return (
+								<tr key={index}>
+									<td>{index + 1}</td>
+									<td>{data.kelas}</td>
+									<td>{data.jurusan}</td>
+									<td className="d-flex gap-1">
+										<Button onClick={() => deleteKls(data.id)} variant="danger">
+											Hapus
+										</Button>
+									</td>
+								</tr>
+							);
+						})}
 					</tbody>
 				</Table>
 			</div>
@@ -144,7 +201,7 @@ const Jurusan = () => {
 						{allJurusan.map((data, index) => {
 							return (
 								<tr key={index}>
-									<td>{index}</td>
+									<td>{index + 1}</td>
 									<td>{data.jurusan}</td>
 									<td className="d-flex gap-1">
 										<Button
@@ -160,7 +217,9 @@ const Jurusan = () => {
 					</tbody>
 				</Table>
 			</div>
-			{kelasModalShow && <AddKelasForm onHide={kelasModalClose} />}
+			{kelasModalShow && (
+				<AddKelasForm getKelasData={getKelasData} onHide={kelasModalClose} />
+			)}
 			{jurusanModalShow && (
 				<AddJurusanForm getJurusanData={getJurusanData} onHide={jurusanModalClose} />
 			)}
